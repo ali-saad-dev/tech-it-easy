@@ -1,5 +1,6 @@
 package nl.novi.techiteasy.controllers;
 
+import nl.novi.techiteasy.exceptions.NameToLongException;
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,5 +20,10 @@ public class ExceptionController {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
+    }
+
+    @ExceptionHandler(NameToLongException.class)
+    public ResponseEntity<String> handleResponseStatusException(NameToLongException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
