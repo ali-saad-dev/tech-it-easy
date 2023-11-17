@@ -1,12 +1,10 @@
 package nl.novi.techiteasy.controllers;
-
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
 import nl.novi.techiteasy.models.CreateTvRequest;
 import nl.novi.techiteasy.models.Television;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
@@ -15,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 @RequestMapping("/televisions")
 public class TelevisionController {
-
     private final ArrayList<Television> televisionDataBase = new ArrayList<>();
     private final AtomicInteger idCounter = new AtomicInteger(1);
     @PostMapping
