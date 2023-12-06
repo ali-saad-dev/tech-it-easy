@@ -1,0 +1,1 @@
+insert into television(id, price, full_name) values(nextval('television_seq'), 1000, 'Samsung')
