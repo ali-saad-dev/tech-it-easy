@@ -1,14 +1,27 @@
 package nl.novi.techiteasy.models;
 
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "television")
 public class Television {
-    int id;
-    String name;
-    double price;
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(name="full_name", length = 128)
+    private String name;
+    @Column(name="price", length = 128)
+  private double price;
 
-    public void setId(int id) {
+    public Television(Long id, String name, double price) {
         this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    public Television() {
+
     }
 
     public void setName(String name) {
@@ -19,13 +32,10 @@ public class Television {
         this.price = price;
     }
 
-    public Television(int id, String name, double price) {
+    public void setId(Long id) {
         this.id = id;
-        this.name = name;
-        this.price = price;
     }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
