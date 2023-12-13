@@ -71,7 +71,7 @@ public class TelevisionService {
         }
     }
 
-    public  TelevisionOutPutDto fromTelevisionToDto(Television television){
+    public TelevisionOutPutDto fromTelevisionToDto(Television television){
         TelevisionOutPutDto dto = new TelevisionOutPutDto();
         dto.id = television.getId();
         dto.name = television.getName();
