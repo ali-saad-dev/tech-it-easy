@@ -1,71 +1,90 @@
 package nl.novi.techiteasy.controllers;
+import jakarta.validation.Valid;
+import nl.novi.techiteasy.dtos.IdInputDto;
+import nl.novi.techiteasy.dtos.TelevisionInputDto;
+import nl.novi.techiteasy.dtos.TelevisionOutPutDto;
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
-import nl.novi.techiteasy.models.CreateTvRequest;
-import nl.novi.techiteasy.models.Television;
-import org.springframework.http.HttpStatus;
+import nl.novi.techiteasy.services.TelevisionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
+import java.util.List;
+
+
 
 @RestController
 @RequestMapping("/televisions")
 public class TelevisionController {
-    private final ArrayList<Television> televisionDataBase = new ArrayList<>();
-    private final AtomicInteger idCounter = new AtomicInteger(1);
-    @PostMapping
-    public ResponseEntity<Television> create(@RequestBody CreateTvRequest model) {
-        int id = idCounter.getAndIncrement();
-        Television result = new Television(id, model.name, model.price);
-        this.televisionDataBase.add(result);
-        return ResponseEntity.created(null).body(result);
-    }
 
-    @GetMapping("/get")
-    public ResponseEntity<Television> get() {
-        if(this.televisionDataBase.isEmpty()) {
-            throw new RecordNotFoundException("Television not found");
-        }
-        else {
-            return ResponseEntity.ok(this.televisionDataBase.get(0));
-        }
-    }
+    private final TelevisionService service;
+
+    public TelevisionController(TelevisionService televisionService){this.service = televisionService;}
 
     @GetMapping
-    public ResponseEntity<ArrayList<Television>> getAll() {
+    public ResponseEntity<List<TelevisionOutPutDto>> getAllTelevision() {
+        return ResponseEntity.ok(service.GetAllTelevision());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<TelevisionOutPutDto> getTelevisionById(@PathVariable Long id) {
+        TelevisionOutPutDto television = service.getTelevisionById(id);
+        return ResponseEntity.ok(television);
+    }
+    @PostMapping
+    public ResponseEntity<Object> createTelevision(@Valid @RequestBody TelevisionInputDto televisionInputDto, BindingResult br) {
 
-        if(this.televisionDataBase.isEmpty()) {
-            throw new RecordNotFoundException("There is no televisions available");
+        if (br.hasFieldErrors()) {
+            StringBuilder sb = new StringBuilder();
+            for (FieldError fe : br.getFieldErrors()) {
+                sb.append(fe.getField());
+                sb.append(" : ");
+                sb.append(fe.getDefaultMessage());
+                sb.append("\n");
+            }
+            return ResponseEntity.badRequest().body(sb.toString());
         }
         else {
-            return new ResponseEntity<>(this.televisionDataBase, HttpStatus.OK);
+            televisionInputDto = service.createTelevision(televisionInputDto);
+
+            URI uri = URI.create(
+                    ServletUriComponentsBuilder
+                            .fromCurrentRequest()
+                            .path("/" + televisionInputDto.id).toUriString());
+
+            return ResponseEntity.created(uri).body(televisionInputDto);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TelevisionOutPutDto> updateTelevision(@PathVariable Long id, @RequestBody TelevisionInputDto televisionInputDto) {
+        try {
+            TelevisionOutPutDto updatedTelevision = service.updateTelevision(id, televisionInputDto);
+            return ResponseEntity.ok(updatedTelevision);
+        } catch (RecordNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ArrayList<Television>> delete(@PathVariable int id) {
-        Iterator<Television> iterator = this.televisionDataBase.iterator();
-        while ((iterator).hasNext()) {
-            Television tv = iterator.next();
-            if (tv.getId() == id) {
-                iterator.remove();
-                return ResponseEntity.ok().build();
-            }
+    public ResponseEntity<TelevisionInputDto> deleteTelevision(@PathVariable Long id) {
+        try {
+            service.deleteTelevision(id);
+            return ResponseEntity.noContent().build();
+        } catch (RecordNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        throw new RecordNotFoundException("There is no televisions available to delete");
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<Television> update(@PathVariable int id, @RequestBody CreateTvRequest model) {
-        Optional<Television> optionalTv = this.televisionDataBase.stream().filter(tv -> tv.getId() == id).findFirst();
-        if ((optionalTv).isPresent()) {
-            Television tvToUpdate = optionalTv.get();
-            tvToUpdate.setName(model.name);
-            tvToUpdate.setPrice(model.price);
-            return ResponseEntity.ok(tvToUpdate);
-        } else {
-            throw new RecordNotFoundException("Update failed");
+
+    @PutMapping("/{id}/remotecontroller")
+    public ResponseEntity<String> putRemoteController(@PathVariable Long id, @RequestBody IdInputDto remoteControllerIdDto) {
+        try {
+            Long remoteControllerId = remoteControllerIdDto.getId();
+            service.assignRemoteControllerToTelevision(id, remoteControllerId);
+            return ResponseEntity.ok("RemoteController assigned to Television successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error assigning RemoteController to Television: " + e.getMessage());
         }
     }
 }
