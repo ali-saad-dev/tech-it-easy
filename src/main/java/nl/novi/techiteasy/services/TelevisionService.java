@@ -3,7 +3,9 @@ package nl.novi.techiteasy.services;
 import nl.novi.techiteasy.dtos.TelevisionOutPutDto;
 import nl.novi.techiteasy.dtos.TelevisionInputDto;
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
+import nl.novi.techiteasy.models.RemoteController;
 import nl.novi.techiteasy.models.Television;
+import nl.novi.techiteasy.repository.RemoteControllerRepository;
 import nl.novi.techiteasy.repository.TelevisionRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,9 @@ import java.util.Optional;
 public class TelevisionService {
 
     private final TelevisionRepository repo;
+    private final RemoteControllerRepository remotrepo;
 
-    public TelevisionService(TelevisionRepository repos){this.repo = repos;}
+    public TelevisionService(TelevisionRepository repos, RemoteControllerRepository remotrepos){this.repo = repos;this.remotrepo = remotrepos;}
 
 
     public TelevisionInputDto createTelevision(TelevisionInputDto televisionInputDto) {
@@ -70,6 +73,20 @@ public class TelevisionService {
             throw new RecordNotFoundException("Television with id " + id + " not found");
         }
     }
+    public void assignRemoteControllerToTelevision(Long televisionId, Long remoteControllerId) {
+        Television television = repo.findById(televisionId)
+                .orElseThrow(() -> new RecordNotFoundException("Television with id " + televisionId + " not found"));
+
+        RemoteController remoteController = remotrepo.findById(remoteControllerId)
+                .orElseThrow(() -> new RecordNotFoundException("RemoteController with id " + remoteControllerId + " not found"));
+
+        television.setRemoteController(remoteController);
+        remoteController.setTelevision(television);
+
+        repo.save(television);
+        remotrepo.save(remoteController);
+    }
+
 
     public TelevisionOutPutDto fromTelevisionToDto(Television television){
         TelevisionOutPutDto dto = new TelevisionOutPutDto();

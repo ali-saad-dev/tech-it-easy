@@ -3,17 +3,38 @@ package nl.novi.techiteasy.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "television")
 public class Television {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="full_name", length = 128)
+    @Column(name="television-name", length = 128)
     private String name;
     @Column(name="price", length = 128)
-  private double price;
+    private double price;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "remoteController_id", referencedColumnName = "id")
+    private RemoteController remoteController;
+    public void setRemoteController(RemoteController remoteController) {
+        this.remoteController = remoteController;
+    }
+    @OneToMany(mappedBy = "television")
+    private List<CI_Module> ciModules;
+
+    public Set<WallBracket> getWallBrackets() {
+        return wallBrackets;
+    }
+    @ManyToMany
+    @JoinTable(name = "television_wallbracket",
+            joinColumns = @JoinColumn(name = "television_id"),
+            inverseJoinColumns = @JoinColumn(name = "wallbracket_id"))
+    private Set<WallBracket> wallBrackets = new HashSet<>();
     public Television(Long id, String name, double price) {
         this.id = id;
         this.name = name;
@@ -32,9 +53,6 @@ public class Television {
         this.price = price;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
     public Long getId() {
         return id;
     }

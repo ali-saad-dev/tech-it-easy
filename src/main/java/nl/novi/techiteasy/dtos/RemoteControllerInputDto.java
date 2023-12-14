@@ -4,11 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public class TelevisionInputDto {
-    public Long id;
+public class RemoteControllerInputDto {
     @NotBlank(message = "Name is mandatory")
     @Size(min=3, max=128)
-    public String name;
+    private String name;
+    private String compatibleWith;
+    private String batteryType;
+    private String brand;
     @Positive
-    public double price;
+    private Double price;
+    private int originalStock;
 }

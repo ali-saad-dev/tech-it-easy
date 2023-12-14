@@ -1,5 +1,6 @@
 package nl.novi.techiteasy.controllers;
 import jakarta.validation.Valid;
+import nl.novi.techiteasy.dtos.IdInputDto;
 import nl.novi.techiteasy.dtos.TelevisionInputDto;
 import nl.novi.techiteasy.dtos.TelevisionOutPutDto;
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
@@ -73,6 +74,17 @@ public class TelevisionController {
             return ResponseEntity.noContent().build();
         } catch (RecordNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/remotecontroller")
+    public ResponseEntity<String> putRemoteController(@PathVariable Long id, @RequestBody IdInputDto remoteControllerIdDto) {
+        try {
+            Long remoteControllerId = remoteControllerIdDto.getId();
+            service.assignRemoteControllerToTelevision(id, remoteControllerId);
+            return ResponseEntity.ok("RemoteController assigned to Television successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error assigning RemoteController to Television: " + e.getMessage());
         }
     }
 }

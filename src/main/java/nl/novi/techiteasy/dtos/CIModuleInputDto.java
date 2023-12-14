@@ -1,14 +1,15 @@
 package nl.novi.techiteasy.dtos;
 
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public class TelevisionInputDto {
-    public Long id;
+public class CIModuleInputDto {
     @NotBlank(message = "Name is mandatory")
     @Size(min=3, max=128)
-    public String name;
+    private String name;
+    private String type;
     @Positive
-    public double price;
+    private Double price;
 }
