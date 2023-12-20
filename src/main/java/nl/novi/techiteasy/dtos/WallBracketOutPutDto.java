@@ -1,9 +1,9 @@
 package nl.novi.techiteasy.dtos;
 
 public class WallBracketOutPutDto {
-    private Long id;
-    private String name;
-    private String size;
-    private Boolean adjustable;
-    private Double price;
+    public Long id;
+    public String name;
+    public String size;
+    public Boolean adjustable;
+    public Double price;
 }

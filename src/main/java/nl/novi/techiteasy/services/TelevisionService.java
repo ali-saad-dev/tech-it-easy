@@ -3,6 +3,7 @@ package nl.novi.techiteasy.services;
 import nl.novi.techiteasy.dtos.TelevisionOutPutDto;
 import nl.novi.techiteasy.dtos.TelevisionInputDto;
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
+import nl.novi.techiteasy.helpper.Mapper;
 import nl.novi.techiteasy.models.RemoteController;
 import nl.novi.techiteasy.models.Television;
 import nl.novi.techiteasy.repository.RemoteControllerRepository;
@@ -23,7 +24,7 @@ public class TelevisionService {
 
 
     public TelevisionInputDto createTelevision(TelevisionInputDto televisionInputDto) {
-     repo.save(fromDtoToTelevision(televisionInputDto));
+     repo.save(Mapper.fromDtoToTelevision(televisionInputDto));
         return televisionInputDto;
     }
 
@@ -32,7 +33,7 @@ public class TelevisionService {
         List<TelevisionOutPutDto> televisionOutPutDtoList = new ArrayList<>();
 
         for(Television television : televisionList) {
-            televisionOutPutDtoList.add(fromTelevisionToDto(television));
+            televisionOutPutDtoList.add(Mapper.fromTelevisionToDto(television));
         }
         return televisionOutPutDtoList;
     }
@@ -42,7 +43,7 @@ public class TelevisionService {
        Optional<Television> tv = repo.findById(id);
 
         if(tv.isPresent()){
-            return fromTelevisionToDto(tv.get());
+            return Mapper.fromTelevisionToDto(tv.get());
         }
         else {
             throw new RecordNotFoundException("no tv founded");
@@ -59,7 +60,7 @@ public class TelevisionService {
 
             repo.save(existingTelevision);
 
-            return fromTelevisionToDto(existingTelevision);
+            return Mapper.fromTelevisionToDto(existingTelevision);
         } else {
             throw new RecordNotFoundException("Television with id " + id + " not found");
         }
@@ -86,21 +87,4 @@ public class TelevisionService {
         repo.save(television);
         remotrepo.save(remoteController);
     }
-
-
-    public TelevisionOutPutDto fromTelevisionToDto(Television television){
-        TelevisionOutPutDto dto = new TelevisionOutPutDto();
-        dto.id = television.getId();
-        dto.name = television.getName();
-        dto.price = television.getPrice();
-        return dto;
-    }
-
-    public Television fromDtoToTelevision(TelevisionInputDto dto){
-        Television television = new Television();
-        television.setName(dto.name);
-        television.setPrice(dto.price);
-        return  television;
-    }
-
 }

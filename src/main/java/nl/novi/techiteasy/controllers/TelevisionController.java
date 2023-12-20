@@ -78,7 +78,7 @@ public class TelevisionController {
     }
 
     @PutMapping("/{id}/remotecontroller")
-    public ResponseEntity<String> putRemoteController(@PathVariable Long id, @RequestBody IdInputDto remoteControllerIdDto) {
+    public ResponseEntity<String> assignRemoteControllerToTelevision(@PathVariable Long id, @RequestBody IdInputDto remoteControllerIdDto) {
         try {
             Long remoteControllerId = remoteControllerIdDto.getId();
             service.assignRemoteControllerToTelevision(id, remoteControllerId);

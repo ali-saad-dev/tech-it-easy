@@ -5,13 +5,16 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public class RemoteControllerInputDto {
+
+    public Long id;
     @NotBlank(message = "Name is mandatory")
     @Size(min=3, max=128)
-    private String name;
-    private String compatibleWith;
-    private String batteryType;
-    private String brand;
+    public String name;
+    public String compatibleWith;
+    public String batteryType;
+    public String brand;
     @Positive
-    private Double price;
-    private int originalStock;
+    public Double price;
+    public int originalStock;
+
 }

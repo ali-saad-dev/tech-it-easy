@@ -2,6 +2,8 @@ package nl.novi.techiteasy.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "ci-Module")
 public class CI_Module {
@@ -12,9 +14,8 @@ public class CI_Module {
     private String type;
     private Double price;
 
-    @ManyToOne
-    @JoinColumn(name="television_id")
-    private Television television;
+    @OneToMany(mappedBy = "ciModule")
+    private List<Television> televisions;
 
     public Long getId() {
         return id;

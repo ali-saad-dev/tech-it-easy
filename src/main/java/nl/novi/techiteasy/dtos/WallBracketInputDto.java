@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public class WallBracketInputDto {
+
+    public Long id;
     @NotBlank(message = "Name is mandatory")
     @Size(min=3, max=128)
-    private String name;
-    private String size;
-    private Boolean adjustable;
+    public String name;
+    public String size;
+    public Boolean adjustable;
     @Positive
-    private Double price;
+    public Double price;
 }

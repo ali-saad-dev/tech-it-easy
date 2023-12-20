@@ -1,11 +1,11 @@
 package nl.novi.techiteasy.dtos;
 
 public class RemoteControllerOutPutDto {
-    private Long id;
-    private String name;
-    private String compatibleWith;
-    private String batteryType;
-    private String brand;
-    private Double price;
-    private int originalStock;
+    public Long id;
+    public String name;
+    public String compatibleWith;
+    public String batteryType;
+    public String brand;
+    public Double price;
+    public int originalStock;
 }

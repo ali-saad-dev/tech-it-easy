@@ -4,7 +4,6 @@ package nl.novi.techiteasy.models;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,9 +23,11 @@ public class Television {
     public void setRemoteController(RemoteController remoteController) {
         this.remoteController = remoteController;
     }
-    @OneToMany(mappedBy = "television")
-    private List<CI_Module> ciModules;
 
+
+    @ManyToOne
+    @JoinColumn(name="ciModule_id")
+    private CI_Module ciModule;
     public Set<WallBracket> getWallBrackets() {
         return wallBrackets;
     }
