@@ -6,6 +6,8 @@ import nl.novi.techiteasy.dtos.TelevisionOutPutDto;
 import nl.novi.techiteasy.exceptions.RecordNotFoundException;
 import nl.novi.techiteasy.services.TelevisionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class TelevisionController {
     public TelevisionController(TelevisionService televisionService){this.service = televisionService;}
 
     @GetMapping
-    public ResponseEntity<List<TelevisionOutPutDto>> getAllTelevision() {
+    public ResponseEntity<List<TelevisionOutPutDto>> getAllTelevision(@AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(service.GetAllTelevision());
     }
     @GetMapping("/{id}")

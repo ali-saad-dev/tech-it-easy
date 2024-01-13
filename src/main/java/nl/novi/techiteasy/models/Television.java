@@ -36,11 +36,6 @@ public class Television {
             joinColumns = @JoinColumn(name = "television_id"),
             inverseJoinColumns = @JoinColumn(name = "wallbracket_id"))
     private Set<WallBracket> wallBrackets = new HashSet<>();
-    public Television(Long id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
 
     public Television() {
 

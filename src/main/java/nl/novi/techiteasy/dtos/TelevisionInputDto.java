@@ -11,4 +11,6 @@ public class TelevisionInputDto {
     public String name;
     @Positive
     public double price;
+
+    public RemoteControllerInputDto remoteController;
 }
