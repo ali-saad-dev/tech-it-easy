@@ -1,14 +1,44 @@
 package nl.novi.techiteasy.models;
 
 
+import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "television")
 public class Television {
-    int id;
-    String name;
-    double price;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name="television-name", length = 128)
+    private String name;
+    @Column(name="price", length = 128)
+    private double price;
 
-    public void setId(int id) {
-        this.id = id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "remoteController_id", referencedColumnName = "id")
+    private RemoteController remoteController;
+    public void setRemoteController(RemoteController remoteController) {
+        this.remoteController = remoteController;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name="ciModule_id")
+    private CI_Module ciModule;
+    public Set<WallBracket> getWallBrackets() {
+        return wallBrackets;
+    }
+    @ManyToMany
+    @JoinTable(name = "television_wallbracket",
+            joinColumns = @JoinColumn(name = "television_id"),
+            inverseJoinColumns = @JoinColumn(name = "wallbracket_id"))
+    private Set<WallBracket> wallBrackets = new HashSet<>();
+
+    public Television() {
+
     }
 
     public void setName(String name) {
@@ -19,13 +49,7 @@ public class Television {
         this.price = price;
     }
 
-    public Television(int id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
